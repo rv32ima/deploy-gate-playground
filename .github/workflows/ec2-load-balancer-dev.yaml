@@ -1,0 +1,27 @@
+# Stand-in for the real ec2-load-balancer-dev.yaml: the deploy gate only looks at this path and the
+# environment, so the job just sleeps. Set fail=true to record a failed dev deploy.
+name: lb dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      fail:
+        description: "Record a failed deployment instead of a successful one"
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: lb-devprod
+    steps:
+      - name: Pretend to deploy
+        env:
+          SHOULD_FAIL: ${{ inputs.fail }}
+        run: |
+          echo "deploying $GITHUB_SHA to lb-devprod"
+          sleep 5
+          if [ "$SHOULD_FAIL" = "true" ]; then
+            echo "failing on purpose"
+            exit 1
+          fi

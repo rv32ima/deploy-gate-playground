@@ -1,0 +1,14 @@
+# Stand-in for the real ec2-bidding-agent-prod-fc.yaml. The bidder-prod environment has the deploy gate
+# enabled, so this job waits for the app's review before it starts.
+name: bidder prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: bidder-prod
+    steps:
+      - name: Pretend to deploy
+        run: echo "deploying $GITHUB_SHA to bidder-prod"
